@@ -28,21 +28,21 @@ def max_word_len(filename):
 #**************************************************************
 #Question 5
 def k_boom(start, end, k):
-    currentNumber = start;
+    currentNumber = start
     returnValue = ""
 
     while currentNumber <= end:
-        dividedBySeven = currentNumber % 7 == 0
-        numberOfSevens = str(currentNumber).count("7")
+        dividedByk = currentNumber % k == 0
+        numberOfKs = str(currentNumber).count(str(k))
 
-        if dividedBySeven:
-            if (numberOfSevens == 0):
+        if dividedByk:
+            if (numberOfKs == 0):
                 returnValue += "boom! "
             else:
                 returnValue += "bada-boom! "
                 
-        elif numberOfSevens > 0:
-            booms = "boom-" * numberOfSevens
+        elif numberOfKs > 0:
+            booms = "boom-" * numberOfKs
             booms = booms[:-1]
             booms += "!"
         
@@ -76,7 +76,7 @@ def check_goldbach_for_num(n, primes_lst):
 def check_goldbach_for_range(limit, primes_lst):
     areAllGoldbach = True
     
-    for evenNumber in range(4, limit, 2):
+    for evenNumber in range(4, limit + 1, 2):
         if (check_goldbach_for_num(evenNumber, primes_lst) == False):
             areAllGoldbach = False
             break
@@ -86,8 +86,19 @@ def check_goldbach_for_range(limit, primes_lst):
 
 # 6c
 def check_goldbach_for_num_stats(n, primes_lst):
-    pass #replace this with your code
+     pairCount = 0
+     pairs = []
 
+     for firstPrime in primes_lst:
+         for secondPrime in primes_lst:
+             if (n == firstPrime + secondPrime):
+                 str1 = str(firstPrime) + "," + str(secondPrime)
+                 str2 = str(secondPrime) + "," + str(firstPrime)
+
+                 if (list.count(pairs, str1) == 0 and list.count(pairs, str2) == 0):
+                     pairs.append(str1)
+                     pairCount += 1
+     return pairCount
 
 ########
 # Tester
