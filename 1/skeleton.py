@@ -25,6 +25,9 @@ def max_word_len(filename):
 
         outFile.write(str(maxLetters)+"\n")
 
+    inFile.close()
+    outFile.close()
+
 #**************************************************************
 #Question 5
 def k_boom(start, end, k):
@@ -76,7 +79,7 @@ def check_goldbach_for_num(n, primes_lst):
 def check_goldbach_for_range(limit, primes_lst):
     areAllGoldbach = True
     
-    for evenNumber in range(4, limit + 1, 2):
+    for evenNumber in range(4, limit, 2):
         if (check_goldbach_for_num(evenNumber, primes_lst) == False):
             areAllGoldbach = False
             break
