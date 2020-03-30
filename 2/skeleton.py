@@ -90,16 +90,19 @@ def modpower_new(a, b, c):
     result = 1 # a**0
     while b > 0:
         if b % 3 == 0:
-            result = (result*a*a*a) % c
+            result = (result*a*a) % c
             a = (a*a*a) % c
         if b % 3 == 1:
             result = (result*a) % c
-            a = (a) % c
+            a = (a*a*a) % c
         if b % 3 == 2:
             result = (result*a*a) % c
-            a = (a*a) % c
+            a = (a* a*a) % c
         b = b // 3
     return result
+
+print(str(modpower_new(3, 4, 5)),  str(pow(3, 4, 5)))
+print(modpower_new(5, 4, 2) != pow(5, 4, 2))
 
 ############
 # QUESTION 3
@@ -260,9 +263,10 @@ def max_div_seq(n, k):
         if digit % k == 0:
             count += 1
         else:
-            if max < count:
-                max = count
-                count = 0
+            count = 0
+
+        if max < count:
+            max = count
 
         temp = temp // 10
 
