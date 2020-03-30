@@ -55,7 +55,7 @@ def legal_par(st):
     return len(openers) == 0
 
 # 1c
-import time
+
 def spiral_sum(k):
     sum = 1
 
@@ -75,11 +75,10 @@ def power_new(a, b):
     b_bin = bin(b)[2:]
     reverse_b_bin = b_bin[::-1]
     for bit in reverse_b_bin:
-        pass  # replace these three "pass" commands with three lines
-        pass
-        pass
+        if bit == "1":
+            result = result * a
+        a = a * a
     return result
-
 
 # 2c
 def modpower_new(a, b, c):
@@ -88,20 +87,19 @@ def modpower_new(a, b, c):
 
     pass  # remove this command, and uncomment the code below
 
-    # result = 1 # a**0
-    # while b > 0:
-    # if b % 3 == 0:
-    # result = (_________________) % c
-    # a = (_________________) % c
-    # if b % 3 == 1:
-    # result = (_________________) % c
-    # a = (_________________) % c
-    # if b % 3 == 2:
-    # result = (_________________) % c
-    # a = (_________________) % c
-    # b = b // ___________________
-    # return result
-
+    result = 1 # a**0
+    while b > 0:
+        if b % 3 == 0:
+            result = (result*a*a*a) % c
+            a = (a*a*a) % c
+        if b % 3 == 1:
+            result = (result*a) % c
+            a = (a) % c
+        if b % 3 == 2:
+            result = (result*a*a) % c
+            a = (a*a) % c
+        b = b // 3
+    return result
 
 ############
 # QUESTION 3
@@ -205,13 +203,9 @@ def getSubList(lst, start, end):
 def has_repeat1(s, k):
     upperIndex = len(s) - k + 1
 
-    substringList = [getSubList(s, i, i + k) for i in range(upperIndex)]
+    substringSet = {getSubList(s, i, i + k) for i in range(upperIndex)}
 
-    for substring in substringList:
-        if substringList.count(substring) > 1:
-            return True
-
-    return False
+    return len(substringSet) < upperIndex
 
 # 4b
 def has_repeat2(s, k):
@@ -219,9 +213,8 @@ def has_repeat2(s, k):
 
     for i in range(upperIndex):
         substring = s[i: i + k]
-        temp = s[i + 1: len(s)]
 
-        if substring in temp:
+        if substring in s[i + 1: len(s)]:
             return True
 
     return False
@@ -229,16 +222,51 @@ def has_repeat2(s, k):
 ############
 # QUESTION 5
 ############
+def getReadingString(strnum):
+    currentNum = strnum[0]
+    count = 0
+    result = ""
+
+    for char in strnum:
+        if char == currentNum:
+            count += 1
+        else:
+            result = result + (str(count) + str(currentNum))
+            count = 1
+            currentNum = char
+
+    result = result + str(count) + str(currentNum)
+    return result
 
 def reading(n):
-    pass  # replace with your code
+    result = "1"
+    for i in range(1, n):
+        temp = getReadingString(result)
+        result = temp
 
+    return result
 
 ############
 # QUESTION 6
 ############
 def max_div_seq(n, k):
-    pass  # replace with your code
+    max = 0
+    count = 0
+    temp = n
+
+    while temp > 0:
+        digit = temp % 10
+
+        if digit % k == 0:
+            count += 1
+        else:
+            if max < count:
+                max = count
+                count = 0
+
+        temp = temp // 10
+
+    return max
 
 
 ########
