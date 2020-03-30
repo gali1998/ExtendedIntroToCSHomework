@@ -84,7 +84,6 @@ def power_new(a, b):
 def modpower_new(a, b, c):
     """ computes a**b mod c using iterated squaring
         assumes b is nonnegative integer  """
-    print("a=" + str(a) + " b= " + str(b) + " c= " + str(c))
     result = 1 # a**0
     while b > 0:
         if b % 3 == 0:
@@ -98,9 +97,6 @@ def modpower_new(a, b, c):
             a = (a*a*a) % c
         b = b // 3
     return result
-
-print(str(modpower_new(3, 4, 5)),  str(pow(3, 4, 5)))
-print(modpower_new(5, 4, 2) != pow(5, 4, 2))
 
 ############
 # QUESTION 3
