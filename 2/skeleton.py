@@ -84,20 +84,18 @@ def power_new(a, b):
 def modpower_new(a, b, c):
     """ computes a**b mod c using iterated squaring
         assumes b is nonnegative integer  """
-
-    pass  # remove this command, and uncomment the code below
-
+    print("a=" + str(a) + " b= " + str(b) + " c= " + str(c))
     result = 1 # a**0
     while b > 0:
         if b % 3 == 0:
-            result = (result*a*a) % c
-            a = (a*a*a) % c
+            result = (result) % c
+            a = (a * a * a) % c
         if b % 3 == 1:
             result = (result*a) % c
             a = (a*a*a) % c
         if b % 3 == 2:
             result = (result*a*a) % c
-            a = (a* a*a) % c
+            a = (a*a*a) % c
         b = b // 3
     return result
 
