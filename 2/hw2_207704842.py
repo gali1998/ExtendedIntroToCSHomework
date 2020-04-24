@@ -249,20 +249,18 @@ def reading(n):
 def max_div_seq(n, k):
     max = 0
     count = 0
-    temp = n
+    strNum = str(n)
 
-    while temp > 0:
-        digit = temp % 10
+    for strDigit in strNum:
+        digit = int(strDigit)
 
         if digit % k == 0:
             count += 1
+
+            if max < count:
+                max = count
         else:
             count = 0
-
-        if max < count:
-            max = count
-
-        temp = temp // 10
 
     return max
 

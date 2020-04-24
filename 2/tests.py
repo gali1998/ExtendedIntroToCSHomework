@@ -1,6 +1,6 @@
 from testHelper import *
 import unittest
-from skeleton import *
+from hw2_207704842 import *
 import random
 
 class TestPow(unittest.TestCase):
@@ -23,7 +23,7 @@ class TestPow(unittest.TestCase):
             result = power_new(n1, n2) == (n1 ** n2)
 
         self.assertTrue(result)
-        
+
 class TestModPow(unittest.TestCase):
     def testBasecases(self):
         self.assertEqual(modpower_new(3, 4, 5), pow(3, 4, 5))
