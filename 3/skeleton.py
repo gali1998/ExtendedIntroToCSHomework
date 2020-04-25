@@ -9,6 +9,7 @@
 
 
 import random
+import math
 
 
 ############
@@ -28,21 +29,7 @@ def random_graph(n, p):
     return [[1 if random.random() <= p else 0 for j in range(n)] for i in range(n)]
 
 def inv_cycle(n):
-    matrix = cycle(n)
-
-    for i in range(n):
-        inverse = i**(n-2) % n
-
-        matrix[i][inverse] = 1
-        matrix[inverse][i] = 1
-
-    return matrix
-
-def inv2(n):
     return [[1 if isInCycle(i, j, n) or j == (i**(n-2) % n) else 0 for j in range(n)] for i in range(n)]
-
-print(inv_cycle(7))
-print(inv2(7))
 
 def return_graph(n):
     return [[1 if (j == 1+ i or (i != 0 and j == 0)) else 0 for j in range(n)] for i in range(n)]
@@ -54,9 +41,7 @@ def random_step(adj, v):
         if adj[v][i] == 1:
             neighbours.append(i)
 
-    stepIndex = random.randrange(0, len(neighbours))
-
-    return neighbours[stepIndex]
+    return random.choice(neighbours)
 
 def walk_histogram(adj):
     histogram = [0] * len(adj)
@@ -66,6 +51,7 @@ def walk_histogram(adj):
     while countDifferentValues < len(adj):
         if histogram[curremtNode] == 0:
             countDifferentValues += 1
+
         histogram[curremtNode] += 1
 
         curremtNode = random_step(adj, curremtNode)
@@ -75,8 +61,6 @@ def walk_histogram(adj):
 
 def cover_time(adj):
     return sum(walk_histogram(adj))
-
-print(cover_time(cycle(7)))
 
 
 ############
@@ -103,7 +87,14 @@ def selection_sort(lst):
 
 
 def generate_sorted_blocks(lst, k):
-    pass  # replace this with your code
+    result = []
+
+    for i in range(0, len(lst), k):
+        sublist = lst[i: i + k].copy()
+        selection_sort(sublist)
+        result.append(sublist)
+
+    return result
 
 
 def merge(A, B):
@@ -132,8 +123,10 @@ def merge(A, B):
 
 # c
 def merge_sorted_blocks(lst):
-    pass  # replace this with your code
+    while(len(lst) > 1):
+        lst = [merge(lst[i], lst[i+ 1]) for i in range(0, len(lst) - 1, 2)]
 
+    return lst[0]
 
 def sort_by_block_merge(lst, k):
     return merge_sorted_blocks(generate_sorted_blocks(lst, k))
@@ -144,7 +137,24 @@ def sort_by_block_merge(lst, k):
 ############
 
 def find_missing(lst, n):
-    pass  # replace this with your code
+    left = 0
+    right = n
+
+    while left < right - 1:
+        index = (right + left) // 2
+
+        if lst[index] == index:
+            left = index
+        elif lst[index] > index:
+            right = index
+
+    if right == n:
+        return right
+    return left
+
+#(find_missing([0,2,3,4,5], 5))
+
+
 
 
 def find(lst, s):
