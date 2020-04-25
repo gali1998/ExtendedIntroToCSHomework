@@ -21,34 +21,62 @@ def isInCycle(i, j, n):
 def cycle(n):
     return [[1 if isInCycle(i, j, n) else 0 for j in range(n)] for i in range(n)]
 
-
 def complete_graph(n):
-    return [[1] * n ] * n
-
+    return [[1 for j in range(n)] for i in range(n)]
 
 def random_graph(n, p):
     return [[1 if random.random() <= p else 0 for j in range(n)] for i in range(n)]
 
 def inv_cycle(n):
-    return [[1 if isInCycle(i, j, n) or j * i == 1 % n else 0 for j in range(n)] for i in range(n)]
-print(cycle(7))
-print(inv_cycle(7))
+    matrix = cycle(n)
 
+    for i in range(n):
+        inverse = i**(n-2) % n
+
+        matrix[i][inverse] = 1
+        matrix[inverse][i] = 1
+
+    return matrix
+
+def inv2(n):
+    return [[1 if isInCycle(i, j, n) or j == (i**(n-2) % n) else 0 for j in range(n)] for i in range(n)]
+
+print(inv_cycle(7))
+print(inv2(7))
 
 def return_graph(n):
-    pass  # replace this with your code
-
+    return [[1 if (j == 1+ i or (i != 0 and j == 0)) else 0 for j in range(n)] for i in range(n)]
 
 def random_step(adj, v):
-    pass  # replace this with your code
+    neighbours = []
 
+    for i in range(len(adj[v])):
+        if adj[v][i] == 1:
+            neighbours.append(i)
+
+    stepIndex = random.randrange(0, len(neighbours))
+
+    return neighbours[stepIndex]
 
 def walk_histogram(adj):
-    pass  # replace this with your code
+    histogram = [0] * len(adj)
+    countDifferentValues = 0
+    curremtNode = 0
+
+    while countDifferentValues < len(adj):
+        if histogram[curremtNode] == 0:
+            countDifferentValues += 1
+        histogram[curremtNode] += 1
+
+        curremtNode = random_step(adj, curremtNode)
+
+    return histogram
 
 
 def cover_time(adj):
-    pass  # replace this line with ONE LINE ONLY
+    return sum(walk_histogram(adj))
+
+print(cover_time(cycle(7)))
 
 
 ############
@@ -161,13 +189,19 @@ def test():
     if complete_graph(4) != \
             [[1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1]]:
         print("error in complete_graph")
+    else:
+        print("ok")
 
     if cycle(5) != \
             [[0, 1, 0, 0, 1], [1, 0, 1, 0, 0], [0, 1, 0, 1, 0], [0, 0, 1, 0, 1], [1, 0, 0, 1, 0]]:
         print("error in cycle")
+    else:
+        print("ok")
 
     if sum(sum(random_graph(100, 0.8)[i]) for i in range(100)) < 200:
         print("error in random_graph")
+    else:
+        print("ok")
 
     if inv_cycle(13) != \
             [[1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], \
@@ -184,11 +218,15 @@ def test():
              [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1], \
              [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1]]:
         print("error in inv_cycle")
+    else:
+        print("ok")
 
     if return_graph(5) != \
             [[0, 1, 0, 0, 0], [1, 0, 1, 0, 0], \
              [1, 0, 0, 1, 0], [1, 0, 0, 0, 1], [1, 0, 0, 0, 0]]:
         print("error in return_graph")
+    else:
+        print("ok")
 
     A = random_graph(100, 0.9)
     for _ in range(10):
@@ -200,6 +238,8 @@ def test():
     if 0 in walk_histogram(inv_cycle(13)) or \
             0 in walk_histogram(cycle(10)):
         print("error in walk_histogram")
+    else:
+        print("ok")
 
     # q3
     lst = [610, 906, 308, 759, 15, 389, 892, 939, 685, 565]
