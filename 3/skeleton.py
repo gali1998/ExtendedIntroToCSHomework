@@ -120,7 +120,6 @@ def merge(A, B):
 
     return C
 
-
 # c
 def merge_sorted_blocks(lst):
     while(len(lst) > 1):
@@ -197,7 +196,7 @@ def find(lst, s):
 
 def find2(lst, s):
     left = 0
-    right = len(lst)
+    right = len(lst) - 1
 
     while left < right:
         middle = (left + right) // 2
@@ -213,12 +212,14 @@ def find2(lst, s):
             if lst[left] <= s and s <= lst[middle]:
                 return binary_search(lst, s, left, middle)
 
-            left = middle
+            left = middle + 1
         else:
             if lst[middle] <= s and s <= lst[right]:
                 return binary_search(lst, s, middle, right)
 
             right = middle
+
+    return None
 
 ############
 # QUESTION 5
@@ -226,23 +227,59 @@ def find2(lst, s):
 
 # a
 def string_to_int(s):
-    pass  # replace this with your code
+    letters = {"a": 0, "b": 1, "c": 2, "d": 3, "e": 4}
+    result = 0
+    length = len(s)
 
+    for i in range(length):
+        value = letters[s[length-i-1]]
+
+        result = (5**(i)*value) + result
+
+    return result
 
 # b
 def int_to_string(k, n):
     assert 0 <= n <= 5 ** k - 1
-    pass  # replace this with your code
+    numbers = {0: "a", 1: "b", 2 : "c", 3: "d", 4: "e"}
+    result = ""
 
+    for i in range(k):
+        result += numbers[n % 5]
+
+        n = n // 5
+
+    return result[::-1]
 
 # c
 def sort_strings1(lst, k):
-    pass  # replace this with your code
+    sorted_list = []
+    help_list = [0] * (5**k)
 
+    for string in lst:
+        number = string_to_int(string)
+        help_list[number] += 1
 
+    for i in range(5**k):
+        if help_list[i] != 0:
+            string = int_to_string(k, i)
+
+            for j in range(help_list[i]):
+                sorted_list.append(string)
+
+    return sorted_list
 # e
 def sort_strings2(lst, k):
-    pass  # replace this with your code
+    sorted_list = []
+
+    for i in range(5**k):
+        string = int_to_string(k, i)
+
+        for sublist in lst:
+            if string == sublist:
+                sorted_list.append(string)
+
+    return sorted_list
 
 
 ########
