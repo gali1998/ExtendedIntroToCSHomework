@@ -17,7 +17,7 @@ import math
 ############
 
 def isInCycle(i, j, n):
-    return (i - j == 1 or i - j == -1 or (i == n-1 and j == 0) or (j == n-1 and i == 0))
+    return (i - j == 1 or i - j == - 1 or (i == n-1 and j == 0) or (j == n-1 and i == 0))
 
 def cycle(n):
     return [[1 if isInCycle(i, j, n) else 0 for j in range(n)] for i in range(n)]
@@ -124,6 +124,8 @@ def merge(A, B):
 # c
 def merge_sorted_blocks(lst):
     while(len(lst) > 1):
+        if len(lst) % 2 != 0:
+            lst[-2] = merge(lst[-1], lst[-2])
         lst = [merge(lst[i], lst[i+ 1]) for i in range(0, len(lst) - 1, 2)]
 
     return lst[0]
@@ -140,30 +142,83 @@ def find_missing(lst, n):
     left = 0
     right = n
 
-    while left < right - 1:
-        index = (right + left) // 2
+    while left < right:
+        middle =  (right + left) // 2
 
-        if lst[index] == index:
-            left = index
-        elif lst[index] > index:
-            right = index
+        if lst[middle] > middle:
+            right = middle
+        else:
+            left = middle + 1
 
-    if right == n:
-        return right
-    return left
-
-#(find_missing([0,2,3,4,5], 5))
+    return right
 
 
+def find_pivot(lst):
+    """returns x such as lst is sorted from 0 to x"""
+    left = 0
+    right = len(lst)
 
+    while(left < right):
+        middle = (left + right) // 2
+
+        if lst[left] < lst[middle]:
+            left = middle
+        else:
+            right = middle
+    return right
+
+def binary_search(lst, key, start, stop):
+    """ iterative binary search
+        lst better be sorted for binary search to work """
+    n = stop + 1
+    left = start
+    right = n-1
+
+    while left <= right:
+        middle = (right+left)//2 # middle rounded dow
+        if key == lst[middle]:   # item found
+            return middle
+        elif key < lst[middle]:  # item cannot be in top half
+            right = middle-1
+        else:                    # item cannot be in bottom half
+            left = middle+1
+
+    return None
 
 def find(lst, s):
-    pass  # replace this with your code
+    pivot = find_pivot(lst)
+
+    if s >= lst[0] and s <= lst[pivot]:
+        return binary_search(lst, s, 0, pivot)
+    else:
+        return binary_search(lst, s, pivot + 1, len(lst))
+
 
 
 def find2(lst, s):
-    pass  # replace this with your code
+    left = 0
+    right = len(lst)
 
+    while left < right:
+        middle = (left + right) // 2
+
+        if lst[middle] == s:
+            return middle
+
+        if lst[left] == lst[middle] and lst[middle] == lst[right]:
+            left += 1
+            right -= 1
+
+        if lst[left] <= lst[middle]:
+            if lst[left] <= s and s <= lst[middle]:
+                return binary_search(lst, s, left, middle)
+
+            left = middle
+        else:
+            if lst[middle] <= s and s <= lst[right]:
+                return binary_search(lst, s, middle, right)
+
+            right = middle
 
 ############
 # QUESTION 5
