@@ -9,7 +9,6 @@
 
 
 import random
-import math
 
 
 ############
@@ -124,8 +123,9 @@ def merge(A, B):
 def merge_sorted_blocks(lst):
     while(len(lst) > 1):
         if len(lst) % 2 != 0:
-            lst[-2] = merge(lst[-1], lst[-2])
-        lst = [merge(lst[i], lst[i+ 1]) for i in range(0, len(lst) - 1, 2)]
+            lst[-2] = merge(lst[-2], lst[-1])
+            lst.pop()
+        lst = [merge(lst[i], lst[i + 1]) for i in range(0, len(lst) - 1, 2)]
 
     return lst[0]
 
@@ -254,7 +254,7 @@ def int_to_string(k, n):
 # c
 def sort_strings1(lst, k):
     sorted_list = []
-    help_list = [0] * (5**k)
+    help_list = [0 for i in range(5**k)]
 
     for string in lst:
         number = string_to_int(string)
