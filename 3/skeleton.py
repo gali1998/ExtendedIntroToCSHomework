@@ -28,7 +28,7 @@ def random_graph(n, p):
     return [[1 if random.random() <= p else 0 for j in range(n)] for i in range(n)]
 
 def inv_cycle(n):
-    return [[1 if isInCycle(i, j, n) or j == (i**(n-2) % n) else 0 for j in range(n)] for i in range(n)]
+    return [[1 if isInCycle(i, j, n) or j == (i**(n-2) % n) or (i == 0 and j == 0) else 0 for j in range(n)] for i in range(n)]
 
 def return_graph(n):
     return [[1 if (j == 1+ i or (i != 0 and j == 0)) else 0 for j in range(n)] for i in range(n)]
@@ -94,6 +94,7 @@ def generate_sorted_blocks(lst, k):
         result.append(sublist)
 
     return result
+print(generate_sorted_blocks([32,12,43,87,56], 4))
 
 
 def merge(A, B):
@@ -192,34 +193,34 @@ def find(lst, s):
     else:
         return binary_search(lst, s, pivot + 1, len(lst))
 
-
-
 def find2(lst, s):
     left = 0
     right = len(lst) - 1
 
-    while left < right:
+    while left <= right:
         middle = (left + right) // 2
 
         if lst[middle] == s:
             return middle
 
-        if lst[left] == lst[middle] and lst[middle] == lst[right]:
+        elif lst[left] == lst[middle] and lst[middle] == lst[right]:
             left += 1
             right -= 1
 
-        if lst[left] <= lst[middle]:
-            if lst[left] <= s and s <= lst[middle]:
-                return binary_search(lst, s, left, middle)
-
-            left = middle + 1
+        elif lst[left] <= lst[middle]:
+            if lst[left] <= s and s < lst[middle]:
+                right = middle - 1
+            else:
+                left = middle + 1
         else:
-            if lst[middle] <= s and s <= lst[right]:
-                return binary_search(lst, s, middle, right)
-
-            right = middle
+            if lst[middle] < s and s <= lst[right]:
+                left = middle + 1
+            else:
+                right = middle
 
     return None
+
+print(find2([-19, -19, -19, -19, 43, 43, 43, -19, -19, -19, -19, -19, -19, -19, -19], 43))
 
 ############
 # QUESTION 5
@@ -273,11 +274,9 @@ def sort_strings2(lst, k):
     sorted_list = []
 
     for i in range(5**k):
-        string = int_to_string(k, i)
-
         for sublist in lst:
-            if string == sublist:
-                sorted_list.append(string)
+            if i == string_to_int(sublist):
+                sorted_list.append(sublist)
 
     return sorted_list
 

@@ -6,7 +6,7 @@ class TestQ3(unittest.TestCase):
     def test_random_100(self):
         result = True
 
-        for i in range(100):
+        for i in range(6000000):
             lst = create_random_list()
             copy = lst.copy()
             copy.sort()
@@ -32,17 +32,56 @@ class TestQ3(unittest.TestCase):
         self.assertEqual(sort_by_block_merge(lst, k), copy)
 
 class TestQ4(unittest.TestCase):
+    def test_find2_100(self):
+        result = True
+        for i in range(6000000):
+            lst = creaste_rotated_random_list_not_unique()
+
+            s = random.choice(lst)
+            result = find2(lst, s)
+
+            if find2(lst, s) == None or s != lst[result]:
+                result = False
+
+        self.assertTrue(result)
+
+    def test_find2(self):
+        lst = creaste_rotated_random_list_not_unique()
+
+        s = random.choice(lst)
+
+        self.assertEqual(s, lst[find2(lst, s)])
+        self.assertEqual(None, find2(lst, -200))
+
+    def test_find_random100(self):
+        result= True
+
+        for i in range(6000000):
+            lst = get_random_rotated_list()
+
+            s = random.choice(lst)
+
+            if find(lst, s) == None or s != lst[find(lst, s)]:
+                print(lst)
+                print(s)
+                print(find(lst, s))
+                result = False
+                break
+
+        self.assertTrue(result)
+
     def test_find_random(self):
         lst = get_random_rotated_list()
 
         s = random.choice(lst)
 
         self.assertEqual(s, lst[find(lst, s)])
-    def test_find_missing_random(self):
-        n = random.randrange(0, 10000)
-        k = random.randrange(0, n + 1)
 
-        lst = [i for i in range(0, n+1) if i != k]
+    def test_find_missing_random(self):
+        n = random.randrange(1, 10000)
+        k = random.randrange(0, n)
+
+        lst = [i for i in range(0, n) if i != k]
 
         self.assertEqual(find_missing(lst, k), k)
 
@@ -50,10 +89,10 @@ class TestQ4(unittest.TestCase):
         result = True
 
         for i in range(100):
-            n = random.randrange(0, 10000)
-            k = random.randrange(0, n + 1)
+            n = random.randrange(1, 10000)
+            k = random.randrange(0, n)
 
-            lst = [i for i in range(0, n + 1) if i != k]
+            lst = [i for i in range(0, n) if i != k]
 
             if find_missing(lst, k) != k:
                 result = False
