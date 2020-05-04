@@ -147,7 +147,7 @@ class TestQ5(unittest.TestCase):
             k = random.randrange(1, 30)
             str1 = get_random_string(k)
             str2 = get_random_string(k)
-            val1 = string_to_int(str1)>= string_to_int(str2)
+            val1 = string_to_int(str1) >= string_to_int(str2)
             val2 = str1 >= str2
 
             if  val1 != val2:

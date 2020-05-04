@@ -31,7 +31,7 @@ def inv_cycle(n):
     return [[1 if isInCycle(i, j, n) or j == (i**(n-2) % n) or (i == 0 and j == 0) else 0 for j in range(n)] for i in range(n)]
 
 def return_graph(n):
-    return [[1 if (j == 1+ i or (i != 0 and j == 0)) else 0 for j in range(n)] for i in range(n)]
+    return [[1 if (j == 1 + i or (i != 0 and j == 0)) else 0 for j in range(n)] for i in range(n)]
 
 def random_step(adj, v):
     neighbours = []
@@ -94,7 +94,6 @@ def generate_sorted_blocks(lst, k):
         result.append(sublist)
 
     return result
-print(generate_sorted_blocks([32,12,43,87,56], 4))
 
 
 def merge(A, B):
@@ -122,6 +121,8 @@ def merge(A, B):
 
 # c
 def merge_sorted_blocks(lst):
+    if len(lst) == 0:
+        return []
     while(len(lst) > 1):
         if len(lst) % 2 != 0:
             lst[-2] = merge(lst[-2], lst[-1])
@@ -143,7 +144,7 @@ def find_missing(lst, n):
     right = n
 
     while left < right:
-        middle =  (right + left) // 2
+        middle = (right + left) // 2
 
         if lst[middle] > middle:
             right = middle
@@ -186,6 +187,8 @@ def binary_search(lst, key, start, stop):
     return None
 
 def find(lst, s):
+    if len(lst) == 0:
+        return None
     pivot = find_pivot(lst)
 
     if s >= lst[0] and s <= lst[pivot]:
@@ -219,8 +222,6 @@ def find2(lst, s):
                 right = middle
 
     return None
-
-print(find2([-19, -19, -19, -19, 43, 43, 43, -19, -19, -19, -19, -19, -19, -19, -19], 43))
 
 ############
 # QUESTION 5
@@ -290,19 +291,13 @@ def test():
     if complete_graph(4) != \
             [[1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1]]:
         print("error in complete_graph")
-    else:
-        print("ok")
 
     if cycle(5) != \
             [[0, 1, 0, 0, 1], [1, 0, 1, 0, 0], [0, 1, 0, 1, 0], [0, 0, 1, 0, 1], [1, 0, 0, 1, 0]]:
         print("error in cycle")
-    else:
-        print("ok")
 
     if sum(sum(random_graph(100, 0.8)[i]) for i in range(100)) < 200:
         print("error in random_graph")
-    else:
-        print("ok")
 
     if inv_cycle(13) != \
             [[1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], \
@@ -319,15 +314,11 @@ def test():
              [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1], \
              [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1]]:
         print("error in inv_cycle")
-    else:
-        print("ok")
 
     if return_graph(5) != \
             [[0, 1, 0, 0, 0], [1, 0, 1, 0, 0], \
              [1, 0, 0, 1, 0], [1, 0, 0, 0, 1], [1, 0, 0, 0, 0]]:
         print("error in return_graph")
-    else:
-        print("ok")
 
     A = random_graph(100, 0.9)
     for _ in range(10):
@@ -339,8 +330,6 @@ def test():
     if 0 in walk_histogram(inv_cycle(13)) or \
             0 in walk_histogram(cycle(10)):
         print("error in walk_histogram")
-    else:
-        print("ok")
 
     # q3
     lst = [610, 906, 308, 759, 15, 389, 892, 939, 685, 565]
