@@ -1,4 +1,4 @@
-from  skeleton import *
+from  hw3_207704842 import *
 
 def get_random_string(k):
     rand_string = ""

@@ -1,71 +1,50 @@
-import random
-import time
-from skeleton import  *
+from idan import *
+from tomer import *
+from bar import *
+from hw3_207704842 import *
 
-
-def something(n, p):
-    matrix = [[0 for j in range(n)] for j in range(n)] # O(n^2)
-    weights = [p*100] * n # O(n)
-    indexes = [i for i in range(0, n)] # O(n)
-
-    for row in matrix:
-        ones = random.choices(indexes, weights)
-
-        for i in ones:
-            row[i] = 1
-    return matrix
-
-
-
-"""for i in range(10):
-    for n in [125, 250, 500, 1000, 2000, 10000]:
-        print("===== " + str(n) + "=====")
-        for p in [0.3, 0.5, 0.7]:
-            count_0 = 0
-            count_1 = 0
-
-            matrix = something(n, p)
-
-            for i in range(n):
-                for j in range(n):
-                    if matrix[i][j] == 1:
-                        count_1 += 1
-                    else:
-                        count_0 += 1
-
-            print("expected: " + str(p))
-            print("actual: " + str(count_1 / (count_0 + count_1)))"""
-ns = []
-for i in range(10):
-    n = 2
-    t = 0
-
-    while t < 60:
-
-        t0 = time.perf_counter()
-        cover_time(return_graph(n))
-
-        t1 = time.perf_counter()
-
-        t = t1-t0
-        n += 1
-    print(n)
-    ns.append(n)
-print("finished" + str(sum(ns)/ 10))
-
-
-
-
-"""for n in [125, 250, 500, 1000, 2000]:
-    print("===== " + str(n) + "=====")
-    for p in [0.3, 0.5, 0.7]:
-        count_1 = time.perf_counter()
-        matrix = random_graph(n, p)
-        cover_time(matrix)
-
-        count_0 = time.perf_counter()
-        print(count_0 - count_1)
-        if count_0 - count_1 >= 60:
+def test_cycle():
+    for i in range(2, 500):
+        if idan_cycle(i) != cycle(i) or tomer_cycle(i) != cycle(i) or bar_cycle(i) != cycle(i):
             print("problem")
-        else:
-            print("ok")"""
+            break
+
+    print("cycle is ok")
+
+
+def test_complete_graph():
+    for i in range(2, 500):
+        if idan_complete_graph(i) != complete_graph(i) or tomer_complete_graph(i) != complete_graph(i) or bar_complete_graph(i) != complete_graph(i):
+            print("problem")
+            break
+
+    print("complete graph is ok")
+
+def test_inv_cycle():
+    primes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199, 211, 223, 227, 229, 233, 239, 241, 251, 257, 263, 269, 271, 277, 281, 283, 293, 307, 311, 313, 317, 331, 337, 347, 349, 353, 359, 367, 373, 379, 383, 389, 397, 401, 409, 419, 421, 431, 433, 439, 443, 449, 457, 461, 463, 467, 479, 487, 491, 499]
+    for i in primes:
+        if idan_inv_cycle(i) != inv_cycle(i) or tomer_inv_cycle(i) != inv_cycle(i) or bar_inv_cycle(i) != inv_cycle(i):
+            if (tomer_inv_cycle(i) != inv_cycle(i)):
+                print("problem with tomer")
+            elif idan_inv_cycle(i) != inv_cycle(i):
+                print("problem with idan")
+            print("problem" + str(i))
+            break
+
+    print("inv cycle is ok")
+
+def test_return_graph():
+    for i in range(2, 500):
+        if idan_return_graph(i) != return_graph(i) or tomer_return_graph(i) != return_graph(i):
+            if(tomer_return_graph(i) != return_graph(i)):
+                print("problem with tomer")
+            else:
+                print("problem with idan")
+            print("problem")
+            break
+
+    print("return graph is ok")
+test_cycle()
+test_complete_graph()
+test_inv_cycle()
+test_return_graph()

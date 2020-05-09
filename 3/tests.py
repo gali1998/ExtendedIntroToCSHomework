@@ -1,5 +1,6 @@
 import unittest
-from skeleton import *
+from hw3_207704842 import *
+from idan import *
 from testhelper import *
 
 class TestQ3(unittest.TestCase):
@@ -14,8 +15,7 @@ class TestQ3(unittest.TestCase):
                 k = random.randrange(1, len(lst))
             else:
                 k = 1
-
-            if sort_by_block_merge(lst, k) != copy:
+            if sort_by_block_merge(lst, k) != copy or sort_by_block_merge(lst, k) != idan_sort_by_block_merge(lst, k):
                 result = False
                 break
 
@@ -24,12 +24,14 @@ class TestQ3(unittest.TestCase):
     def test_random(self):
         lst = create_random_list()
         copy = lst.copy()
+        lst2 = lst.copy()
         copy.sort()
         if len(lst) != 1:
             k = random.randrange(1, len(lst))
         else:
             k = 1
         self.assertEqual(sort_by_block_merge(lst, k), copy)
+        self.assertEqual(sort_by_block_merge(lst, k), idan_sort_by_block_merge(lst2, k))
 
 class TestQ4(unittest.TestCase):
     def test_find2_100(self):
