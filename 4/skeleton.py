@@ -20,11 +20,9 @@ def win(n, m):
         return False
 
     for i in range(2, m + 1):
-        print(str(n) + "," + str(m) + " calls " + str(n)+","+str(m+1-i))
         if not win(n, m  + 1 - i):
             return True
     for i in range(2, n + 1):
-        print(str(n) + "," + str(m) + " calls " + str(n+1-i) + "," + str(m ))
         if not win(n + 1 - i,m):
             return True
     return False
@@ -35,16 +33,13 @@ def win_fast_mem(n, m, dict):
     key = "n="+str(n)+"m="+str(m)
 
     if key in dict:
-        print(key)
         return dict[key]
 
     for i in range(2, m + 1):
-        print(str(n) + "," + str(m) + " calls " + str(n)+","+str(m+1-i))
         if not win_fast_mem(n, m  + 1 - i, dict):
             dict[key] = True
             return True
     for i in range(2, n + 1):
-        print(str(n) + "," + str(m) + " calls " + str(n+1-i) + "," + str(m ))
         if not win_fast_mem(n + 1 - i,m, dict):
             dict[key] = True
             return True
@@ -92,6 +87,8 @@ had_complete = lambda n: [[had_local(n, i, j) for j in range(2**n)] for i in ran
 
 def subset_sum_count(L, s):
     if s == 0:
+        if 0 in L:
+            return 2
         return 1
     if L == []:
         return 0
@@ -100,97 +97,76 @@ def subset_sum_count(L, s):
 
     return with_first + without_first
 
-
-
 def subset_sum_search_all(L, s):
     if s == 0:
+        if 0 in L:
+            return [[], [0]]
         return [[]]
 
-    result = []
-    i=0
-    while i < len(L):
-        sublist = subset_sum_search_from_index(L, s, i, [])
-
-        if sublist != []:
-            result.append(sublist)
-        else:
-            i += 1
-        i += len(sublist)
-
-    return  result
-
-def subset_sum_search_from_index(L, s, i, result):
-    if s == 0:
-        return result
-    if i == len(L):
-        print("s")
+    if L == []:
         return []
-    with_first = subset_sum_search_from_index(L, s-L[i], i + 1, result + [L[i]])
-    without_first = subset_sum_search_from_index(L, s, i + 1, result)
 
-    if with_first == []:
-        return without_first
-    return  with_first
+    with_first = subset_sum_search_all(L[1:], s - L[0])
+    without_first = subset_sum_search_all(L[1:], s)
 
-print("%%%%%%%%%%%%")
-L = [3, 2]
+    if with_first != []:
+        add_value_to_all_sublists(with_first, L[0])
 
-#print(subset_sum_search_from_index([1,2], 6, 1, []))
-print(subset_sum_search_all([], 0))
-print("%%%%%%%%%%%%")
+    return with_first + without_first
+
+
+def add_value_to_all_sublists(L, value):
+    for sublist in L:
+        sublist.append(value)
+
+    return L
 
 ############
 # QUESTION 6
 ############
 
 def distance(s1, s2):
-    print("called with " +s1+","+s2)
-    if len(s1) == 0:
-        return len(s2)
-    if len(s2) == 0:
-        return len(s1)
-    len_s1 = len(s1)
-    len_s2 = len(s2)
-    if s1[len_s1 - 1] == s2[len_s2 - 1]:
-        return distance(s1[:len_s1 - 1], s2[:len_s2 - 1])
+    return distance_with_index(s1, s2, len(s1), len(s2))
+
+def distance_with_index(s1, s2, index_s1, index_s2):
+    if index_s1 == 0:
+        return index_s2
+    if index_s2 == 0:
+        return index_s1
+
+    if s1[index_s1 - 1] == s2[index_s2 - 1]:
+        return distance_with_index(s1, s2, index_s1 - 1, index_s2 - 1)
     else:
-        distance_insert = distance(s1, s2[:len_s2 - 1])
-        distance_remove = distance(s1[: len_s1 - 1], s2)
-        distance_replace = distance(s1[:len_s1 - 1], s2[: len_s2 - 1])
+        distance_insert = distance_with_index(s1, s2, index_s1, index_s2 - 1)
+        distance_remove = distance_with_index(s1, s2, index_s1 - 1, index_s2)
+        distance_replace = distance_with_index(s1, s2, index_s1 - 1, index_s2 - 1)
         return 1 + min(distance_insert, distance_remove, distance_replace)
+
 
 def distance_fast(s1, s2):
     distances = [[-1 for j in range(len(s2))] for i in range(len(s1))]
 
-    return distance_mem(s1, s2, distances)
+    return distances_mem_with_index(s1, s2, len(s1), len(s2), distances)
 
-def distance_mem(s1, s2, distances):
-    print("called with " +s1+","+s2)
-    len1 = len(s1)
-    len2 = len(s2)
 
-    if len1 == 0:
-        return len2
-    if len2 == 0:
-        return len1
+def distances_mem_with_index(s1, s2, index_s1, index_s2, distances):
+    if index_s1 == 0:
+        return index_s2
+    if index_s2 == 0:
+        return index_s1
+    if distances[index_s1 - 1][index_s2 - 1] != -1:
+        return distances[index_s1 - 1][index_s2 - 1]
+    if s1[index_s1 - 1] == s2[index_s2 - 1]:
+        distances[index_s1 - 1][index_s2 - 1] = distances_mem_with_index(s1, s2, index_s1 - 1, index_s2 - 1, distances)
 
-    if distances[len1 - 1][len2 -1] != -1:
-        return distances[len1 - 1][len2 -1]
-    if s1[len1-1] == s2[len2-1]:
-        distances[len1-1][len2-1] = distance_mem(s1[:len1-1], s2[:len2-1], distances)
+        return distances[index_s1 - 1][index_s2 - 1]
+    distance_insert = distances_mem_with_index(s1, s2, index_s1, index_s2 - 1, distances)
+    distance_remove = distances_mem_with_index(s1, s2, index_s1 - 1, index_s2, distances)
+    distance_replace = distances_mem_with_index(s1, s2, index_s1 - 1, index_s2 - 1, distances)
 
-        return distances[len1-1][len2-1]
-    distance_insert = distance_mem(s1, s2[:len2 - 1], distances)
-    distance_remove = distance_mem(s1[: len1 - 1], s2, distances)
-    distance_replace = distance_mem(s1[:len1 - 1], s2[: len2 - 1], distances)
+    distances[index_s1 - 1][index_s2 - 1] = 1 + min(distance_insert, distance_remove, distance_replace)
 
-    distances[len1-1][len2-1] = 1 + min(distance_insert, distance_remove, distance_replace)
-
-    return distances[len1-1][len2-1]
-print("---------------------------------")
-print(distance_fast("ab", "cd"))
-print(distance("ab", "cd"))
-print("---------------------------------")
+    return distances[index_s1 - 1][index_s2 - 1]
 
 ########
 # Tester
