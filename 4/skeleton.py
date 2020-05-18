@@ -86,9 +86,7 @@ had_complete = lambda n: [[had_local(n, i, j) for j in range(2**n)] for i in ran
 ############
 
 def subset_sum_count(L, s):
-    if s == 0:
-        if 0 in L:
-            return 2
+    if s == 0 and L == []:
         return 1
     if L == []:
         return 0
@@ -98,9 +96,7 @@ def subset_sum_count(L, s):
     return with_first + without_first
 
 def subset_sum_search_all(L, s):
-    if s == 0:
-        if 0 in L:
-            return [[], [0]]
+    if s == 0 and L == []:
         return [[]]
 
     if L == []:
@@ -140,6 +136,7 @@ def distance_with_index(s1, s2, index_s1, index_s2):
         distance_insert = distance_with_index(s1, s2, index_s1, index_s2 - 1)
         distance_remove = distance_with_index(s1, s2, index_s1 - 1, index_s2)
         distance_replace = distance_with_index(s1, s2, index_s1 - 1, index_s2 - 1)
+
         return 1 + min(distance_insert, distance_remove, distance_replace)
 
 

@@ -1,7 +1,33 @@
 import itertools
 import  random
+
+def get_random_string():
+    length = random.randrange(1, 10)
+    letters = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x', 'y','z']
+
+    string = ""
+    for i in range(length):
+        string += random.choice(letters)
+    return string
+
+def levenshtein(s, t):
+    if s == "":
+        return len(t)
+    if t == "":
+        return len(s)
+    if s[-1] == t[-1]:
+        cost = 0
+    else:
+        cost = 1
+
+    res = min([levenshtein(s[:-1], t) + 1,
+               levenshtein(s, t[:-1]) + 1,
+               levenshtein(s[:-1], t[:-1]) + cost])
+
+    return res
+
 def get_random_list():
-    options = [i for i in range(0, 101)]
+    options = [i for i in range(-101, 101)]
 
     length = random.randrange(1, 20)
 
