@@ -43,7 +43,7 @@ def get_random_list():
 
 def get_all_sublists(L):
     result = []
-    for i in range(len(L)):
+    for i in range(len(L) + 1):
         all_sublists = itertools.combinations(L, i)
         for t in all_sublists:
             result.append(list(t))

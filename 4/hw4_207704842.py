@@ -86,30 +86,37 @@ had_complete = lambda n: [[had_local(n, i, j) for j in range(2**n)] for i in ran
 ############
 
 def subset_sum_count(L, s):
-    if s == 0 and L == []:
+    return subset_sum_count_with_index(L, 0, s)
+
+def subset_sum_count_with_index(L, index, s):
+    if s == 0 and index == len(L):
         return 1
-    if L == []:
+    if index == len(L):
         return 0
-    with_first = subset_sum_count(L[1:], s-L[0])
-    without_first = subset_sum_count(L[1:], s)
+
+    first = index
+    with_first = subset_sum_count_with_index(L, index + 1, s - L[first])
+    without_first = subset_sum_count_with_index(L, index + 1, s)
 
     return with_first + without_first
 
 def subset_sum_search_all(L, s):
-    if s == 0 and L == []:
-        return [[]]
+    return subset_sum_search_all_with_index(L, 0, s)
 
-    if L == []:
+def subset_sum_search_all_with_index(L, index, s):
+    if s == 0 and index == len(L):
+        return [[]]
+    if index == len(L):
         return []
 
-    with_first = subset_sum_search_all(L[1:], s - L[0])
-    without_first = subset_sum_search_all(L[1:], s)
+    first = index
+    with_first = subset_sum_search_all_with_index(L, index + 1, s - L[first])
+    without_first = subset_sum_search_all_with_index(L, index + 1, s)
 
     if with_first != []:
-        add_value_to_all_sublists(with_first, L[0])
+        add_value_to_all_sublists(with_first, L[first])
 
     return with_first + without_first
-
 
 def add_value_to_all_sublists(L, value):
     for sublist in L:
