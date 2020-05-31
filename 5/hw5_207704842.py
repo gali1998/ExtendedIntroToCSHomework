@@ -259,51 +259,52 @@ class Binary_search_tree():
         '''
         fill-in your code below here according to the instructions
         '''
-        def get_depth(node):
+        def is_node_balanced(node):
             if node == None:
                 return 0
-            left = get_depth(node.left)
-            right = get_depth(node.right)
 
+            left = is_node_balanced(node.left)
+
+            if left == -1:
+                return -1
+
+            right = is_node_balanced(node.right)
+
+            if right == -1:
+                return -1
+            difference = left - right
+
+            if abs(difference) > 1:
+                return -1
             return max(left, right) + 1
-        def is_balanced_node(node):
-            if node == None:
-                return True
-            left = get_depth(node.left)
-            right = get_depth(node.right)
 
-            if abs(left - right) <= 1 and is_balanced_node(node.left) and is_balanced_node(node.right):
-                return True
-            return False
-
-        return is_balanced_node(self.root)
+        return is_node_balanced(self.root) != -1
 
 
     def diam(self):
         '''
         fill-in your code below here according to the instructions
         '''
-        if self.root == None:
-            return 0
-        def max_distance(node):
+        def diam_helper(node, h):
+            left_height = Height()
+            right_height = Height()
+
             if node == None:
+                h.height = 0
                 return 0
-            left = max_distance(node.left)
-            right = max_distance(node.right)
+            left_diam = diam_helper(node.left, left_height)
+            right_diam = diam_helper(node.right, right_height)
 
-            return 1 + max(left, right)
+            h.height = max(left_height.height,right_height.height) + 1
 
-        def node_diam(node):
-            if node == None:
-                return 0
-            left = max_distance(node.left)
-            right = max_distance(node.right)
+            return max(left_height.height + right_height.height + 1, max(left_diam, right_diam))
+        h1 = Height()
 
-            return max(1 + left + right, node_diam(node.left), node_diam(node.right))
+        return diam_helper(self.root, h1)
 
-        return node_diam(self.root)
-
-
+class Height:
+    def __init__(self):
+        self.height = 0
 ############
 # QUESTION 3
 ############
@@ -511,11 +512,8 @@ class Dict:
     def find(self, key):
         """ returns ALL values of key as a list, empty list if none """
         index = self.hash_mod(key)
-        result = []
-        for item in self.table[index]:
-            if item[0] == key:
-                result.append(item[1])
-        return result
+
+        return [item[1] for item in self.table[index] if item[0] == key]
 
 
 #########################################

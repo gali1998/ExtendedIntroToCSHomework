@@ -30,7 +30,7 @@ class Test_q4(unittest.TestCase):
         self.assertFalse(deleted_value in head)
     def test_rotate(self):
         result = True
-        n = random.randrange(1, 10)
+        n = random.randrange(2, 10)
         l = get_random_list(n)
         k = random.randrange(1, n)
         lst = DLList(l)
@@ -135,8 +135,8 @@ class Test_q2(unittest.TestCase):
 
     def test_is_balanced_100(self):
         result = True
-        for i in range(100):
-            n = random.randrange(1, 100)
+        for i in range(1000000):
+            n = random.randrange(1, 5)
             trees = gen_tree_and_rtree(n)
 
             t = trees[0]
@@ -158,7 +158,7 @@ class Test_q2(unittest.TestCase):
 
     def test_diam_100(self):
         result = True
-        for i in range(100):
+        for i in range(10000):
             n = random.randrange(1, 100)
             trees = gen_tree_and_rtree(n)
 

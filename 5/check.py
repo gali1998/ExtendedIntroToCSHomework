@@ -15,7 +15,7 @@ def generate_long_string():
     return "A"*2000
 
 def get_random_list():
-    n = random.randrange(5, 20)
+    n = random.randrange(19, 20)
     lst = []
 
     for i in range(n):
@@ -23,8 +23,8 @@ def get_random_list():
 
     return lst
 
-def compare_runitmes():
-    k = random.randrange(1, 2000)
+'''def compare_runitmes():
+    k = random.randrange(1999, 2000)
     lst = get_random_list()
 
     t1 = time.perf_counter()
@@ -46,4 +46,18 @@ def compare_runitmes():
 for i in range(10):
     print("===========================")
     compare_runitmes()
-    print("===========================")
+    print("===========================")'''
+
+def gen_tree(n):
+    t = Binary_search_tree()
+    G = [i for i in range(n)]
+    random.shuffle(G)
+    for i in G:
+        t.insert(i, i)
+
+    return t
+
+t = gen_tree(1)
+
+print(str(t))
+print(t.is_balanced())
