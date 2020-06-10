@@ -89,7 +89,7 @@ class Test_q3(unittest.TestCase):
     def test_random100(self):
         result = True
         for i in range(100):
-            n = random.randrange(0, 50)
+            n = random.randrange(0, 100)
 
             l1 = get_random_list(n)
             l2 = get_random_list(n)
@@ -236,6 +236,7 @@ class TestPermutation(unittest.TestCase):
         for i in range(k):
             lst.append(random.choice(lst_options))
 
+        copy = lst.copy()
         composed = compose_list(lst)
 
         resl_composed = lst[0]
@@ -243,15 +244,15 @@ class TestPermutation(unittest.TestCase):
         for i in range(1, k):
             resl_composed = resl_composed.compose(lst[i])
 
+        self.assertEqual(copy, lst)
         self.assertEqual(resl_composed, composed)
 
     def test_order(self):
-        n = random.randrange(10)
+        n = random.randrange(2,10)
         permutations = get_permutations(n)
+        permutations = permutations[1:]
         identity = Permutation([i for i in range(n)])
-        perm = identity.perm
-        while perm == identity.perm:
-            perm = random.choice(permutations)
+        perm = random.choice(permutations)
         p = Permutation(perm)
 
         lst = []
@@ -262,10 +263,39 @@ class TestPermutation(unittest.TestCase):
 
         before_k = compose_list(lst[1:])
         with_k = compose_list(lst)
-        print(before_k.perm)
 
         self.assertEqual(identity.order(), 1)
         self.assertEqual(identity, with_k)
         self.assertNotEqual(identity, before_k)
+
+
+class Test_Q6(unittest.TestCase):
+    def test_random(self):
+        k = random.randrange(1, 1000000)
+        lst = generate_list_of_random_string(k)
+
+        first_solution = prefix_suffix_overlap(lst, k)
+        second_solution = prefix_suffix_overlap_hash1(lst, k)
+        third_solution = prefix_suffix_overlap_hash2(lst, k)
+
+        self.assertTrue(check_result(first_solution, second_solution))
+        self.assertTrue(check_result(second_solution, third_solution))
+
+    def test_random100(self):
+        result = True
+
+        for i in range(100):
+            k = random.randrange(1, 1000)
+            lst = generate_list_of_random_string(k)
+
+            first_solution = prefix_suffix_overlap(lst, k)
+            second_solution = prefix_suffix_overlap_hash1(lst, k)
+            third_solution = prefix_suffix_overlap_hash2(lst, k)
+
+            if check_result(first_solution, second_solution) == False or check_result(second_solution, third_solution) == False:
+                result = False
+
+                break
+        self.assertTrue(result)
 
 

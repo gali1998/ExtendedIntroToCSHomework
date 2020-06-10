@@ -25,7 +25,8 @@ class Permutation:
             return True
 
         if is_legal(perm):
-            self.perm = perm
+            perm_copy = perm.copy()
+            self.perm = perm_copy
 
     def __getitem__(self, i):
         return self.perm[i]

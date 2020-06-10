@@ -61,3 +61,9 @@ t = gen_tree(1)
 
 print(str(t))
 print(t.is_balanced())
+
+perms = get_permutations(5)
+p = random.choice(perms)
+print("===========")
+print(perms[1:])
+print(Permutation(p).order())

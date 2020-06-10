@@ -5,7 +5,10 @@ from reference import Binary_search_tree as reference_tree
 from reference import Permutation as reference_permutation
 
 def get_permutations(n):
-    return list(itertools.permutations([i for i in range(n)]))
+    perms = list(itertools.permutations([i for i in range(n)]))
+    result = [list(i) for i in perms]
+
+    return result
 
 def gen_tree_and_rtree(n):
     t = Binary_search_tree()
@@ -61,3 +64,54 @@ def get_values_from_tail(doubly_linked):
         result.append(current.value)
         current = current.prev
     return result
+
+def get_random_string_of_length(n):
+    letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u',
+               'v', 'w', 'x', 'y', 'z']
+
+    result = ""
+
+    for i in range(n):
+        c = random.choice(letters)
+
+        result += c
+    return result
+
+def generate_list_of_random_string(k):
+    n = random.randrange(1, 100)
+
+    result = []
+    strings = 0
+
+    while strings < n:
+        prefix = get_random_string_of_length(k)
+
+        overlaps = random.randrange(0, n - strings)
+
+        result.append(generate_random_string_for_prefix(prefix))
+
+        for i in range(overlaps):
+            result.append(generate_random_string_for_suffix(prefix))
+
+        strings = strings + overlaps + 1
+        random.shuffle(result)
+    return result
+
+def generate_random_string_for_prefix(prefix):
+    n = random.randrange(0, 10000)
+
+    return prefix + get_random_string_of_length(n)
+
+def generate_random_string_for_suffix(suffix):
+    n = random.randrange(0, 10000)
+
+    return get_random_string_of_length(n) + suffix
+
+def check_result(lst1, lst2):
+    for item in lst1:
+        if item not in lst2:
+            return False
+    for item in lst2:
+        if item not in lst1:
+            return False
+    return True
