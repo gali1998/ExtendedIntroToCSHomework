@@ -32,6 +32,7 @@ class ImprovedGenerator:
             self.does_have_next = False
             self.next_value = None
 
+
     def has_next(self):
         """
             fill-in your code below here according to the instructions
@@ -72,46 +73,26 @@ class ImprovedGenerator:
         g = couple_generator(other)
         return ImprovedGenerator(g)
 
-
 ############
 # QUESTION 3
 ############
-def maxmatch(T, p, triple_dict, w=2 ** 12 - 1, max_length=2 ** 5 - 1):
+def maxmatch(T, p, triple_dict, w=2**12-1, max_length=2**5-1):
     """ finds a maximum match of length k<=2**5-1 in a w long window, T[p:p+k] with T[p-m:p-m+k].
-           Returns m (offset) and k (match length) """
+        Returns m (offset) and k (match length) """
 
-    assert isinstance(T, str)
+    assert isinstance(T,str)
     n = len(T)
     maxmatch = 0
     offset = 0
-    if p + 3 > len(T) or T[p:p + 3] not in triple_dict:
+    if p + 3 > len(T) or T[p:p+3] not in triple_dict:
         return offset, maxmatch
     """
         fill-in your code below here according to the instructions
     """
-
-    match_indexes = triple_dict[T[p:p+3]]
-
-    for i in range(len(match_indexes) - 1, -1, -1):
-
-        m = p - match_indexes[i]
-        print(m)
-        if m >= w:
-            break
-        k = 0
-        while k < min(n - p, max_length) and T[p-m+k] == T[p + k]:
-            print(T[p-m+k])
-            print(T[p + k])
-
-            k += 1
-        if maxmatch < k:
-            maxmatch = k
-            offset = m
-    print(triple_dict)
-    return offset, maxmatch
+    indexes = triple_dict[T[p:p+3]]
 
 
-def LZW_compress(text, w=2 ** 12 - 1, max_length=2 ** 5 - 1):
+def LZW_compress(text, w=2**12-1, max_length=2**5-1):
     """LZW compression of an ascii text. Produces a list comprising of either ascii characters
        or pairs [m,k] where m is an offset and k>=3 is a match (both are non negative integers) """
     result = []
@@ -124,27 +105,18 @@ def LZW_compress(text, w=2 ** 12 - 1, max_length=2 ** 5 - 1):
         """
             fill-in your code below here according to the instructions
         """
-        if k < 3:
-            result.append(text[p])
-            add_triple_to_dict(text, p, triple_dict)
-            p+=1
-        else:
-            result.append([m,k])
-            for i in range(k):
-                add_triple_to_dict(text, p+i, triple_dict)
-            p+=k
     return result  # produces a list composed of chars and pairs
-
 
 def add_triple_to_dict(text, p, triple_dict):
     """ Adds to the dictionary mapping from a key T[p:p+2] to a new
         integer in a list p."""
-    if p + 3 > len(text): return
-    triple = text[p:p + 3]
+    if p+3 > len(text): return
+    triple = text[p:p+3]
     if triple in triple_dict:
         triple_dict[triple].append(p)
     else:
         triple_dict[triple] = [p]
+
 
 
 ############
@@ -172,8 +144,6 @@ def text_fingerprint(text, m, basis=2 ** 16, r=2 ** 32 - 3):
         # compute f[s], based on f[s-1]
         list.append(f, new_fingerprint)  # append f[s] to existing f
     return f
-
-
 ##############################################
 
 
@@ -181,19 +151,22 @@ def is_rotated_1(s, t, basis=2 ** 16, r=2 ** 32 - 3):
     """
     fill-in your code below here according to the instructions
     """
-    if len(t) != len(s):
-        return False
-    if s == t:
-        return True
-    fingerprint1 = fingerprint(s, basis, r)
-    fingerprint2 = fingerprint(t, basis, r)
-    b_power = pow(basis, len(t) - 1, r)
+    index_s = 0
+    index_t = len(t) - index_s
 
-    for i in range(len(t)):
-        if fingerprint1 == fingerprint2:
+    for i in range(len(s)):
+        beginning_s = s[0:index_s]
+        ending_t = t[index_t:len(t)]
+
+        beginnin_t = t[0:index_t]
+        ending_s = s[index_s:len(s)]
+
+        if (fingerprint(beginning_s, basis, r) == fingerprint(ending_t, basis, r)) and (fingerprint(ending_s, basis, r) == fingerprint(beginnin_t, basis, r)):
             return True
-        ord_of_letter = ord(t[i])
-        fingerprint2 = ((fingerprint2 - (ord_of_letter * b_power))*basis + ord_of_letter) % r
+
+        index_s += 1
+        index_t -= 1
+
     return False
 
 
@@ -201,26 +174,23 @@ def is_rotated_2(s, t):
     """
     fill-in your code below here according to the instructions
     """
-    if len(t) != len(s):
-        return False
-    if len(t) == 0:
-        return True
-    for m in range(len(s), 0, -1):
+
+    for m in range(len(s), 1, -1):
         fingerprint_beginning_of_s = text_fingerprint(s, m)[0]
-        fingerprints_endings_of_t = text_fingerprint(t, m)
+        fingerprints_endings_of_t = text_fingerprint(t,m)
         fingerprint_ending_of_t = fingerprints_endings_of_t[len(fingerprints_endings_of_t) - 1]
+
 
         m2 = len(t) - m
         fingerprints_ending_of_s = text_fingerprint(s, m2)
         fingerprint_ending_of_s = fingerprints_ending_of_s[len(fingerprints_ending_of_s) - 1]
         fingerprint_beginning_of_t = text_fingerprint(t, m2)[0]
 
-        if (fingerprint_beginning_of_s == fingerprint_ending_of_t) and (
-                fingerprint_beginning_of_t == fingerprint_ending_of_s):
+        if (fingerprint_beginning_of_s == fingerprint_ending_of_t) and (fingerprint_beginning_of_t == fingerprint_ending_of_s):
             return True
     return False
 
-#print(is_rotated_2("zdwtffnohb", "dwtffnohbz"))
+
 ############
 # QUESTION 7
 ############
@@ -247,10 +217,9 @@ def had_local(n, i, j):
 
     return had_local(n-1, i, j)
 
-
 # (1)
 def had(n):
-    mat = Matrix(pow(2, n), pow(2, n))
+    mat = Matrix(pow(2,n), pow(2,n))
     rows, columns = mat.dim()
 
     for i in range(rows):
@@ -267,8 +236,6 @@ def get_row(mat, i):
 
     for j in range(m):
         result.append(mat[i, j])
-
-
     return result
 
 
@@ -278,8 +245,6 @@ def get_column(mat, i):
 
     for j in range(m):
         result.append(mat[j, i])
-
-
     return result
 def getS(v):
     result = []
@@ -294,102 +259,33 @@ def is_union_empty(g1, g2):
             return False
     return True
 
-def get_binary_matrix(n):
-    m = Matrix(n, n)
-
-    for i in range(n):
-        rep = format(i, "0"+str(n)+"b")
-
-        for j in range(n):
-            if rep[j] == "0":
-                m[i,j] = 0
-            else:
-                m[i,j] = 1
-    return m
-
 def disj(n):
-    mat = Matrix(pow(2, n), pow(2, n), 1)
-    l = pow(2,n)
+    mat = Matrix(pow(2,n), pow(2,n))
     """
          fill-in your code below here according to the instructions
     """
-    for i in range(l):
-        for j in range(l):
-            row = format(i, "b")
-            col = format(j, "b")
-            len_row = len(row)
-            len_col = len(col)
-            index_row = len_row - 1
-            index_col = len_col - 1
+    n = pow(2,n)
 
-            for k in range(min(len_row, len_col)):
-                if row[index_row] == col[index_col] and col[index_col] == "1":
-                    mat[i,j] = 0
-                index_col -= 1
-                index_row -= 1
+    for i in range(n):
+        for j in range(n):
+            row = get_row(mat, i)
+            column = get_column(mat, j)
 
+            br = getS(row)
+            bc = getS(column)
+
+            if is_union_empty(br, bc) == True:
+                mat[i, j] = 1
+            else:
+                mat[i,j] = 0
     return mat
 
-def join_h(mat1, mat2):
-    """ joins two matrices, side by side with some separation """
-    n1,m1 = mat1.dim()
-    n2,m2 = mat2.dim()
-    m = m1+m2+10 #+10 to separate between the images
-    n = max(n1,n2)
-    new = Matrix(n, m, val=255)  # fill new matrix with white pixels
-
-    new[:n1,:m1] = mat1
-    new[:n2,m1+10:m] = mat2
-
-    return new
-def join_v(mat1, mat2):
-    """ joins two matrices, vertically with some separation """
-    n1,m1 = mat1.dim()
-    n2,m2 = mat2.dim()
-    n = n1+n2 #+10 to separate between the images
-    m = max(m1,m2)
-    new = Matrix(n, m, val=255)  # fill new matrix with white pixels
-
-    new[:n1,:m1] = mat1
-    new[n1:n,:m2] = mat2
-
-    return new
-def join(*mats, direction):
-    ''' *mats enables a variable number of parameters.
-        direction is either 'h' or 'v', for horizontal or vertical join, respectively '''
-    func = join_v if direction == 'v' else join_h
-    res = mats[0] #first matrix parameter
-    for mat in mats[1:]:
-        res = func(res, mat)
-    return res
 # (3)
-
-def get_images():
-    m2 = Matrix.load("2.bitmap")
-    m0 = Matrix.load("0.bitmap")
-    m7 = Matrix.load("7.bitmap")
-    m4 = Matrix.load("4.bitmap")
-    m8 = Matrix.load("8.bitmap")
-
-    result = {"2": m2, "0": m0, "7": m7, "4": m4, "8": m8}
-    return result
-
 def id_image():
     """
          fill-in your code below here according to the instructions
          use Matrix.load() to load the images
     """
-    # load images
-    numbers = get_images()
-
-    m = join(numbers["2"],numbers["0"],numbers["2"],numbers["7"],numbers["7"],numbers["0"],numbers["4"],numbers["8"],numbers["4"],numbers["2"], direction='h')
-
-    # pad with white pixels so the matrix will be 30x300
-    k = Matrix(10,  300, 255)
-    m = join_v(m, k)
-
-    return m
-
 
 ########
 # Tester
@@ -405,17 +301,17 @@ def test():
         if g2.peek() != i:
             print("error in peek")
 
-        if next(g2) != i:
-            print("error in next")
-
         if (i != 4 and (not g2.has_next())) or (i == 4 and g2.has_next()):
             print("error in has_next")
+
+        if next(g2) != i:
+            print("error in next")
 
     try:
         next(g2)
         print("should throw stopiteration")
     except StopIteration:
-        print("GOOD: raises StopIteration as should")
+        print("raises StopIteration as should")
     except:
         print("not the correct exception")
 
@@ -427,7 +323,7 @@ def test():
     g5 = g3.product(g4)
 
     for i in range(3):
-        if next(g5) != (i, i):
+        if next(g5) != {i,i}:
             print("error in product")
 
     # Question 3
@@ -449,7 +345,7 @@ def test():
     # (1)
     had1 = Matrix(2, 2)
     had1[1, 1] = 1
-    if had(1) != had1:
+    if had(1)!=had1:
         print("error in had")
 
     # (2)

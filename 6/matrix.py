@@ -147,11 +147,16 @@ class Matrix:
 
     # display - for image visualization - no need to understand this
     ################################################################
-    def display(self, title=None, zoom=None):
+    def display(self, title=None, zoom=None, binary=False):
         height, width = self.dim()
-        pixels = " ".join('{' + ' '.join('#' + '{:02x}'.format(int(pixel)) * 3
-                                         for pixel in row) + '}'
-                          for row in self.rows)
+        if binary:
+            pixels = " ".join('{' + ' '.join('#' + '{:02x}'.format(int(pixel if pixel != 1 else 255)) * 3
+                                             for pixel in row) + '}'
+                              for row in self.rows)
+        else:
+            pixels = " ".join('{' + ' '.join('#' + '{:02x}'.format(int(pixel)) * 3
+                                             for pixel in row) + '}'
+                              for row in self.rows)
 
         def tk_worker(root):
             pi = tkinter.PhotoImage(width=width, height=height)
@@ -186,7 +191,7 @@ import sys
 import tkinter
 import time
 
-TKTHREAD_ENABLED = sys.platform in ('win32', 'linux')
+TKTHREAD_ENABLED = sys.platform in ('win32', 'linux', 'win86')
 
 if TKTHREAD_ENABLED:
     import threading
